@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  sonarqube:
+    image: arllain/sonarqube:1.0.0
+    ports:
+      - '9000:9000'
+    networks:
+      - mynetwork
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions      
+    environment:
+      - SONAR_FORCEAUTHENTICATION=false
+  jenkins:
+    image: arllain/jenkins:1.0.0
+    ports:
+      - '8082:8080'
+      - '50000:50000'
+    networks:
+      - mynetwork
+    volumes:
+      - 'jenkins_home:/var/jenkins_home'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/var/lib/jenkins/workspace/'
+volumes:
+  jenkins_home:
+    driver: local
+  sonarqube_conf:
+    driver: local
+  sonarqube_data:
+    driver: local
+  sonarqube_extensions:
+    driver: local
+networks:
+  mynetwork:
